@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avro Viewer - Browser-based Avro File Explorer</title>
+
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Hero / Header -->
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    <i class="fas fa-file-archive"></i> Avro Viewer
+                </h1>
+                <p class="subtitle">
+                    Explore Avro container files in your browser with zero dependencies
+                </p>
+                <div class="tags">
+                    <span class="tag is-light">Pure OCaml</span>
+                    <span class="tag is-light">Client-Side Only</span>
+                    <span class="tag is-light">Memory Efficient</span>
+                    <span class="tag is-light">Schema Evolution</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="section">
+        <div class="container">
+
+            <!-- File Upload Area -->
+            <div id="upload-area" class="box">
+                <div class="file is-large is-boxed has-name is-centered">
+                    <label class="file-label">
+                        <input class="file-input" type="file" id="file-input" accept=".avro">
+                        <span class="file-cta">
+                            <span class="file-icon">
+                                <i class="fas fa-upload"></i>
+                            </span>
+                            <span class="file-label">
+                                Choose an Avro file…
+                            </span>
+                        </span>
+                        <span class="file-name" id="file-name">
+                            No file selected
+                        </span>
+                    </label>
+                </div>
+
+                <div class="content has-text-centered mt-4">
+                    <p class="has-text-grey">
+                        <i class="fas fa-info-circle"></i>
+                        Or drag and drop an .avro file anywhere on this page
+                    </p>
+                    <p class="is-size-7 has-text-grey-light">
+                        Files are processed entirely in your browser. No data is uploaded to any server.
+                    </p>
+                </div>
+            </div>
+
+            <!-- File Info Panel (hidden initially) -->
+            <div id="file-info" class="box" style="display: none;">
+                <div class="columns">
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">File Name</label>
+                            <div class="control">
+                                <input class="input is-static" id="info-filename" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">File Size</label>
+                            <div class="control">
+                                <input class="input is-static" id="info-filesize" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">Compression</label>
+                            <div class="control">
+                                <input class="input is-static" id="info-compression" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">Record Count</label>
+                            <div class="control">
+                                <input class="input is-static" id="info-count" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schema Viewer (hidden initially) -->
+            <div id="schema-panel" class="box" style="display: none;">
+                <h2 class="title is-4">
+                    <i class="fas fa-code"></i> Schema
+                </h2>
+                <div class="tabs is-boxed">
+                    <ul>
+                        <li class="is-active" data-tab="schema-json">
+                            <a>JSON Schema</a>
+                        </li>
+                        <li data-tab="schema-fields">
+                            <a>Fields</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="tab-content">
+                    <div id="schema-json" class="tab-pane is-active">
+                        <pre id="schema-display" class="code-block"></pre>
+                    </div>
+                    <div id="schema-fields" class="tab-pane" style="display: none;">
+                        <table class="table is-fullwidth is-striped">
+                            <thead>
+                                <tr>
+                                    <th>Field Name</th>
+                                    <th>Type</th>
+                                    <th>Optional</th>
+                                </tr>
+                            </thead>
+                            <tbody id="schema-fields-table">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter Panel (hidden initially) -->
+            <div id="filter-panel" class="box" style="display: none;">
+                <h2 class="title is-5">
+                    <i class="fas fa-filter"></i> Filter Records
+                </h2>
+                <div class="field has-addons">
+                    <div class="control is-expanded">
+                        <input class="input" type="text" id="filter-input"
+                               placeholder="Enter filter expression (e.g., age > 25)">
+                    </div>
+                    <div class="control">
+                        <button class="button is-info" id="filter-apply">
+                            <span class="icon">
+                                <i class="fas fa-search"></i>
+                            </span>
+                            <span>Apply</span>
+                        </button>
+                    </div>
+                    <div class="control">
+                        <button class="button" id="filter-clear">
+                            <span class="icon">
+                                <i class="fas fa-times"></i>
+                            </span>
+                            <span>Clear</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="content">
+                    <p class="help">
+                        Examples: <code>name = "Alice"</code>, <code>age >= 30</code>, <code>email contains "@example.com"</code>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Records Table (hidden initially) -->
+            <div id="records-panel" class="box" style="display: none;">
+                <div class="level">
+                    <div class="level-left">
+                        <div class="level-item">
+                            <h2 class="title is-4">
+                                <i class="fas fa-table"></i> Records
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="level-right">
+                        <div class="level-item">
+                            <span id="records-showing">Showing 0-0 of 0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="table is-fullwidth is-striped is-hoverable">
+                        <thead id="table-header">
+                        </thead>
+                        <tbody id="table-body">
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <nav class="pagination is-centered" role="navigation">
+                    <button class="pagination-previous button" id="prev-page">
+                        <span class="icon"><i class="fas fa-arrow-left"></i></span>
+                        <span>Previous</span>
+                    </button>
+                    <button class="pagination-next button" id="next-page">
+                        <span>Next</span>
+                        <span class="icon"><i class="fas fa-arrow-right"></i></span>
+                    </button>
+                    <ul class="pagination-list">
+                        <li><span class="pagination-link is-current" id="page-info">Page 1</span></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- Loading Indicator -->
+            <div id="loading" class="box has-text-centered" style="display: none;">
+                <div class="spinner"></div>
+                <p class="mt-4">Processing file...</p>
+            </div>
+
+            <!-- Error Display -->
+            <div id="error-display" class="notification is-danger" style="display: none;">
+                <button class="delete" id="error-close"></button>
+                <div id="error-message"></div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="content has-text-centered">
+            <p>
+                <strong>Avro Viewer</strong> - Built with
+                <a href="https://github.com/tmcgilchrist/avro-simple">avro-simple</a> and
+                <a href="https://ocsigen.org/js_of_ocaml/">js_of_ocaml</a>
+            </p>
+            <p class="is-size-7 has-text-grey">
+                Pure OCaml compiled to JavaScript • No server required • Privacy-first
+            </p>
+        </div>
+    </footer>
+
+    <!-- Load the compiled OCaml/JSOO bundle -->
+    <script src="main.bc.js"></script>
+</body>
+</html>

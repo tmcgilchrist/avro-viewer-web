@@ -1,0 +1,38 @@
+name: Build
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up OCaml
+      uses: ocaml/setup-ocaml@v2
+      with:
+        ocaml-compiler: 5.2.x
+
+    - name: Pin avro-simple dependency
+      run: opam pin add avro-simple git+https://github.com/tmcgilchrist/avro-simple.git#master --yes
+
+    - name: Install dependencies
+      run: opam install . --deps-only --with-test --yes
+
+    - name: Build project
+      run: opam exec -- dune build
+
+    - name: Build JavaScript
+      run: opam exec -- dune build src/main.bc.js
+
+    - name: Build server
+      run: opam exec -- dune build server/server.exe
+
+    - name: Build test data generator
+      run: opam exec -- dune build test/generate_test_data.exe
