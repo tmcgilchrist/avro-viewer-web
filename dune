@@ -1,0 +1,9 @@
+(data_only_dirs static)
+
+(install
+ (section share)
+ (files
+  (static/index.html as www/index.html)
+  (static/style.css as www/style.css)
+  (src/main.bc.js as www/main.bc.js))
+ (package avro_viewer_web))

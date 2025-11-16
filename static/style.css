@@ -1,0 +1,233 @@
+/* Custom styles for Avro Viewer */
+
+:root {
+    --primary-color: #3273dc;
+    --code-bg: #f5f5f5;
+    --border-color: #dbdbdb;
+}
+
+/* Code blocks */
+.code-block {
+    background-color: var(--code-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 1rem;
+    overflow-x: auto;
+    font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    max-height: 400px;
+}
+
+/* Drag and drop styling */
+#upload-area {
+    border: 2px dashed var(--border-color);
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+#upload-area.dragover {
+    border-color: var(--primary-color);
+    background-color: #f0f8ff;
+    transform: scale(1.02);
+}
+
+/* File input styling */
+.file.is-boxed .file-cta {
+    border-radius: 6px;
+}
+
+/* Loading spinner */
+.spinner {
+    margin: 0 auto;
+    width: 50px;
+    height: 50px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Tab styling */
+.tab-pane {
+    padding: 1rem 0;
+}
+
+.tab-pane:not(.is-active) {
+    display: none;
+}
+
+.tabs li {
+    cursor: pointer;
+}
+
+/* Table enhancements */
+.table-container {
+    overflow-x: auto;
+    max-height: 600px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+}
+
+.table thead {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.table tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+/* Pagination */
+.pagination {
+    margin-top: 1.5rem;
+}
+
+.pagination-previous,
+.pagination-next {
+    min-width: 120px;
+}
+
+/* Hero section */
+.hero {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.hero .tag {
+    margin: 0.25rem;
+}
+
+/* Info panels */
+.field .input.is-static {
+    background-color: white;
+    border-color: var(--border-color);
+    cursor: default;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+    .table-container {
+        max-height: 400px;
+    }
+
+    .level {
+        flex-direction: column;
+    }
+
+    .pagination-previous,
+    .pagination-next {
+        min-width: auto;
+    }
+}
+
+/* Error display */
+.notification.is-danger {
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Schema fields table */
+#schema-fields-table td {
+    vertical-align: middle;
+}
+
+/* Filter panel */
+#filter-panel .help code {
+    background-color: var(--code-bg);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.85em;
+}
+
+/* Record count badge */
+#records-showing {
+    font-weight: 600;
+    color: #363636;
+}
+
+/* Footer */
+.footer {
+    background-color: #fafafa;
+    margin-top: 3rem;
+}
+
+/* Scrollbar styling for webkit browsers */
+.table-container::-webkit-scrollbar,
+.code-block::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.table-container::-webkit-scrollbar-track,
+.code-block::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb,
+.code-block::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover,
+.code-block::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Success message */
+.message.is-success {
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Button hover effects */
+.button {
+    transition: all 0.2s ease;
+}
+
+.button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.button:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+/* Disabled state */
+.button:disabled,
+.pagination-previous:disabled,
+.pagination-next:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Highlight active pagination */
+.pagination-link.is-current {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}

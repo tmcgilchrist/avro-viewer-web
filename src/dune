@@ -1,0 +1,14 @@
+(executable
+ (name main)
+ (modes js)
+ (modules main dom_utils app_state file_upload schema_viewer record_table filter_panel)
+ (libraries
+  js_of_ocaml
+  js_of_ocaml-ppx
+  js_of_ocaml-lwt
+  yojson
+  avro-simple
+  str)
+ (preprocess (pps js_of_ocaml-ppx lwt_ppx))
+ (js_of_ocaml
+  (flags (:standard --source-map))))

@@ -1,0 +1,39 @@
+# Dune build artifacts
+_build/
+
+# OCaml compiled files
+*.cmi
+*.cmo
+*.cmx
+*.cmt
+*.cmti
+*.cma
+*.cmxa
+*.o
+*.a
+*.so
+*.dylib
+
+# Opam local switch
+_opam/
+
+# Generated files
+*.install
+*.merlin
+
+# JavaScript build output (committed for deployment)
+# src/main.bc.js
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Test data files (can regenerate)
+static/*.avro
+
+# Logs
+*.log

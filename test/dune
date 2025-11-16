@@ -1,0 +1,7 @@
+(executable
+ (name generate_test_data)
+ (libraries
+  avro-simple
+  qcheck-core
+  unix)
+ (modules generate_test_data))
